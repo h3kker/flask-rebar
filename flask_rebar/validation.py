@@ -48,8 +48,9 @@ def filter_dump_only(schema, data):
 
         # construct loadable (a subset of non_dump_only, with recursive filter of nested dump_only fields)
         loadable = dict()
+        rev_map = { (f.data_key if f.data_key is not None else k): k for (k, f) in schema.fields.items()}
         for k, v in non_dump_only.items():
-            field = schema.fields[k]
+            field = schema.fields[rev_map[k]]
             # see if we have a nested schema (using either Nested(many=True) or List(Nested())
             field_schema = None
             if isinstance(field, fields.Nested):
